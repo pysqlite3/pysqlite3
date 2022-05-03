@@ -192,17 +192,20 @@ class AmalgationLibSqliteBuilder(build_ext):
             v = None
         self.__dict__[k] = v
 
+with open("README.md") as f:
+    long_desc = f.read()
 
 def get_setup_args():
     return dict(
         name=PACKAGE_NAME,
-        description="DB-API 2.0 interface for Sqlite 3.x",
-        long_description='',
-        author="Charles Leifer",
-        author_email="coleifer@gmail.com",
+        description="DB-API 2.0 interface for Sqlite 3.x, pre-compiled wheels available for win/linux/macos.",
+        long_description=long_desc,
+        long_description_content_type="text/markdown",
+        author="ttimasdf",
+        author_email="opensource@rabit.pw",
         license="zlib/libpng",
         platforms="ALL",
-        url="https://github.com/coleifer/pysqlite3",
+        url="https://github.com/pysqlite3/pysqlite3",
         package_dir={PACKAGE_NAME: "pysqlite3"},
         packages=packages,
         ext_modules=[Extension(
