@@ -230,6 +230,10 @@ def get_setup_args():
         license="zlib/libpng",
         platforms="ALL",
         url="https://github.com/pysqlite3/pysqlite3",
+        use_scm_version={
+            "local_scheme": "dirty-tag"
+        },
+        setup_requires=['setuptools_scm[toml]'],
         package_dir={PACKAGE_NAME: "pysqlite3"},
         packages=packages,
         ext_modules=[Extension(
