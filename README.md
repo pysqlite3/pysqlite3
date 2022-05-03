@@ -1,11 +1,13 @@
-pysqlite3
-=========
+# pysqlite3
 
 This library takes the SQLite module from Python 3 and packages it as a
-separately-installable module.
+separately-installable module. The binary package is statically compiled
+which make it easy to embedded the library in certain circumstances.
 
 This may be useful for creating SQLite modules capable of working with other
-versions of SQLite (via the amalgamation option).
+versions of SQLite (via the amalgamation option). Meanwhile, the included SQLite
+library is compiled with **all features enabled**, that user may benefit from
+more features, like the score based database FTS (Full-Text Search).
 
 Additional features:
 
