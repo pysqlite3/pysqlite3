@@ -5,6 +5,7 @@ import os
 import shutil
 import sys
 from distutils import log
+from distutils.command.sdist import sdist
 from distutils.command.build_ext import build_ext
 from enum import Enum, auto
 from html.parser import HTMLParser
@@ -88,10 +89,10 @@ class SystemLibSqliteBuilder(build_ext):
         build_ext.build_extension(self, ext)
 
 
-class AmalgationLibSqliteBuilder(build_ext):
-    description = "Builds a C extension using a sqlite3 amalgamation"
 
-    amalgamation_root = "build/sqlite3"
+class SqliteAmalgationDownloader:
+    command_name = "sqlite_src"
+    amalgamation_root = "src"
     amalgamation_header = os.path.join(amalgamation_root, 'sqlite3.h')
     amalgamation_source = os.path.join(amalgamation_root, 'sqlite3.c')
 
@@ -142,10 +143,33 @@ class AmalgationLibSqliteBuilder(build_ext):
             else:
                 raise RuntimeError(self.amalgamation_message)
 
+class AmalgationLibSdistGenerator(sdist, SqliteAmalgationDownloader):
+    user_options = sdist.user_options + [(
+        "with-sqlite", None,
+        "Add sqlite amalgation source code to sdist package. [default; disable with --no-sqlite]",
+    ), (
+        "no-sqlite", None,
+        "don't include the sqlite amalgation source code",
+    )]
+    boolean_options = sdist.boolean_options + ["with-sqlite"]
+    negative_opt = sdist.negative_opt.copy()
+    negative_opt.update({"no-sqlite": "with-sqlite"})
+
+    def initialize_options(self) -> None:
+        self.with_sqlite = 1
+        return super().initialize_options()
+    
+    def run(self) -> None:
+        if self.with_sqlite:
+            self.check_amalgamation()
+        return super().run()
+
+class AmalgationLibSqliteBuilder(build_ext, SqliteAmalgationDownloader):
+    description = "Builds a C extension using a sqlite3 amalgamation"
+
     def build_extension(self, ext):
         log.info(self.description)
 
-        # it is responsibility of user to provide amalgamation
         self.check_amalgamation()
 
         # Feature-ful library.
@@ -225,6 +249,7 @@ def get_setup_args():
             "Topic :: Database :: Database Engines/Servers",
             "Topic :: Software Development :: Libraries :: Python Modules"],
         cmdclass={
+            "sdist": AmalgationLibSdistGenerator,
             "build_ext": AmalgationLibSqliteBuilder,
             "build_dynamic": SystemLibSqliteBuilder
         }
