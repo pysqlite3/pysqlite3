@@ -1,3 +1,9 @@
+# sqlite amalgation source code
+src/sqlite3.[ch]
+
+# VSCode
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
