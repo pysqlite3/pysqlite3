@@ -221,7 +221,7 @@ with open("README.md") as f:
 
 def get_setup_args():
     return dict(
-        name=PACKAGE_NAME,
+        name="pysqlite-binary",
         description="DB-API 2.0 interface for Sqlite 3.x, pre-compiled wheels available for win/linux/macos.",
         long_description=long_desc,
         long_description_content_type="text/markdown",
