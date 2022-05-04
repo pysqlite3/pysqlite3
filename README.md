@@ -19,52 +19,41 @@ Additional features:
 * Sqlite native backup API (also present in standard library 3.7 and newer).
 
 A completely self-contained binary package (wheel) is available for versions
-0.4.1 and newer as `pysqlite3-binary`. This package contains the latest release
+0.5.1 and newer as `pysqlite-binary`. This package contains the latest release
 of SQLite compiled with numerous extensions, and requires no external
 dependencies.
 
-Building with System SQLite
----------------------------
+# Using the binary package
 
-To build `pysqlite3` linked against the system SQLite, run:
+A binary package (wheel) is available for Windows/Linux/macOS with a completely
+self-contained `pysqlite3`, statically-linked against the most recent release
+of SQLite.
 
+```bash
+pip install pysqlite-binary
 ```
-$ python setup.py build
-```
 
-Building a statically-linked library
-------------------------------------
+# Building a statically-linked library
 
 To build `pysqlite3` statically-linked against a particular version of SQLite,
 you need to obtain the SQLite3 source code and copy `sqlite3.c` and `sqlite3.h`
 into the source tree.
 
-```
-# Download the latest release of SQLite source code and build the source
-# amalgamation files (sqlite3.c and sqlite3.h).
-$ wget https://www.sqlite.org/src/tarball/sqlite.tar.gz?r=release \
-    -O sqlite.tar.gz
-$ tar xzf sqlite.tar.gz
-$ cd sqlite/
-$ ./configure
-$ make sqlite3.c
+A build plugin is implemented to automatically download the amalgamation source
+code from official website. If you want to compile against a specific version,
+The SQLite version number is controlled through `SQLITE_VERSION`
+variable in [setup.py#L22](https://github.com/pysqlite3/pysqlite3/blob/3fe3828cfd46407a9afeee3a76d8839b1cd759a2/setup.py#L22).
 
-# Copy the sqlite3 amalgamation files into the root of the pysqlite3 checkout
-# and run build_static + build:
-$ cp sqlite/sqlite3.[ch] pysqlite3/
-$ cd pysqlite3
-$ python setup.py build_static build
+```
+python setup.py build_ext build
 ```
 
 You now have a statically-linked, completely self-contained `pysqlite3`.
 
-Using the binary package
-------------------------
+# Building with System SQLite
 
-A binary package (wheel) is available for linux with a completely
-self-contained  `pysqlite3`, statically-linked against the most recent release
-of SQLite.
+To build `pysqlite3` linked against the system SQLite, run:
 
 ```
-$ pip install pysqlite3-binary
+python setup.py build_dynamic
 ```
